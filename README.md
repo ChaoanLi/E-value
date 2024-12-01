@@ -5,3 +5,4 @@ Visualizing Multiple Testing Method in (Li & Zhang, 2024)[**A Note on E-values a
 
 Overview
 In this project, we replicate and extend the analysis of multiple testing methods presented in the paper. The focus is on understanding how different tests perform under various conditions and comparing their effectiveness through visualizations. The analysis includes comparisons of BH, BC, FBC, FBH, and ST test procedures.
+![Rplot](https://github.com/user-attachments/assets/e6f57b12-f3f4-421d-a312-967eda330322)
