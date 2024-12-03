@@ -32,7 +32,7 @@ p_values <- 2 * (1 - pnorm(abs(z_scores)))
 
 # Reject score function
 RejectScore <- function(false_positive,true_positive) {
-  RS = true_positive * reward - false_positive * (1 - reward)
+  RS =1/(1+exp(false_positive * (1 - reward)- true_positive * reward )) 
   return(RS)
 }
 
@@ -70,14 +70,14 @@ y5 <- sapply(x, function(x) Flexfunction("exp", x))
 
 # Plot the functions
 plot(x, y1, type = "l", col = "red", lwd = 2, ylim = c(0, 1),
-     xlab = "x", ylab = "y", main = "Flexfunction Visualization")
+     xlab = "t", ylab = "varphi(t)",)
 lines(x, y2, col = "blue", lwd = 2)
 lines(x, y3, col = "green", lwd = 2)
 lines(x, y4, col = "purple", lwd = 2)
 lines(x, y5, col = "orange", lwd = 2)
 # Add a legend
 legend("bottomright", 
-       legend = c("log(x+1)/log 2", "sqrt(x)", "x", "x^2", "(e^x-1)/(e-1)"),
+       legend = c("log(t+1)/log 2", "sqrt(t)", "t", "t^2", "(e^t-1)/(e-1)"),
        col = c("red", "blue", "green", "purple", "orange"), 
        lwd = 2, 
        cex = 0.7)
@@ -166,6 +166,7 @@ threshold <- function(alpha, method, function_type = NULL, lambda = NULL) {
   
   return(T)
 }
+
 
 # Output results table
 results_base <- tibble(
@@ -264,8 +265,12 @@ for (result_key in names(all_results)) {
 # Count the categorized results by method and add method name to the data frame
 category_summary_all <- bind_rows(
   lapply(names(all_results), function(result_key) {
+    # Extract the threshold value for the current method
+    threshold_value <- all_results[[result_key]]$results$Threshold_T[1]  # Assuming the threshold value is the same for all rows in the method
+    
     all_results[[result_key]]$results %>%
-      mutate(Method = result_key) %>%  # Use result_key as method name
+      mutate(Method = result_key,  # Use result_key as method name
+             Threshold_T = threshold_value) %>%  # Add Threshold_T column
       mutate(
         Category = case_when(
           Significant & True_Effect ~ "True Positive",
@@ -274,7 +279,7 @@ category_summary_all <- bind_rows(
           !Significant & !True_Effect ~ "True Negative"
         )
       ) %>%
-      count(Method, Category)  # Count by method and category
+      count(Method, Category, Threshold_T)  # Count by method, category, and threshold
   })
 )
 
@@ -320,9 +325,9 @@ visualization_data %>%
     )
   ) +
   labs(
-    title = "Adjusted P-Value Analysis with Result Categories",
+    title = "P-Value Distribution",
     x = "Gene ID",
-    y = "Adjusted P-Value",
+    y = "P-Value",
     color = "Category"
   ) +
   theme_minimal() +
@@ -360,4 +365,14 @@ visualization_data %>%
     plot.title = element_text(hjust = 0.5)  # Center the global title
   ) +
   facet_wrap(~ Method, scales = "free_y", labeller = label_value)  # Use Method for faceting
+
+# plot the threshold of ST method
+x <- seq(0, 1, length.out = 100)
+y <- numeric(length(x))
+for (i in 1:length(x)) {
+  y[i] <- threshold(0.05,"ST",lambda = (x[i]))
+}
+# 
+plot(x, y, type = "l", col = "blue", lwd = 2, 
+     xlab = "lambda", ylab = "T")
 
