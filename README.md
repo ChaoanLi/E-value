@@ -1,6 +1,6 @@
 # STAT 689 Final Project - Fall 2024
 
-This project implements and compares multiple multiple-testing correction methods using simulated gene expression data. It provides a performance-based evaluation framework and visualization tools to assess FDR control and statistical power.
+This project implements and compares several multiple-testing correction methods using simulated gene expression data. It provides a performance-based evaluation framework and visualization tools to assess FDR control and statistical power.
 
 ## Author
 
@@ -41,7 +41,7 @@ These packages will be installed automatically if not already present.
 
 ## How to Run
 
-1. Open the script in R or RStudio.
+1. Open [evalue.R](evalue.R) in R or RStudio.
 2. Run the entire file. It will:
    - Generate simulated data
    - Apply each FDR method
@@ -81,7 +81,7 @@ Calculates FDR, power, rejection rate, and other metrics based on decisions at t
 
 ## License
 
-This code is free to use, modify, and distribute with proper attribution.
+See [LICENSE](LICENSE) for the MIT License terms.
 
 ---
 For questions or feedback, please contact [chaoan@tamu.edu](mailto:chaoan@tamu.edu).
